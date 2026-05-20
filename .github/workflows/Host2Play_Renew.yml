@@ -2,9 +2,9 @@ name: Host2Play 续期
 
 on:
   schedule:
-  - cron: '0 0,11,13,15,17,19,22 * * *'    # 触发点: 00:00, 11:00, 22:00
-    - cron: '30 5,16 * * *'      # 触发点: 05:30, 16:30
-    workflow_dispatch:
+    - cron: '0 0,11,13,15,17,19,22 * * *'    # 触发点: 00:00, 11:00, 22:00 等
+    - cron: '30 5,16 * * *'                  # 触发点: 05:30, 16:30
+  workflow_dispatch:
 
 permissions:
   actions: write
@@ -67,22 +67,3 @@ jobs:
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
         run: python main.py
-
-      - name: 上传截图
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots-${{ github.run_number }}
-          path: output/screenshots/*.png
-          retention-days: 7
-          if-no-files-found: ignore
-
-      - name: 清理历史运行记录
-        if: always()
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          delete_workflow_pattern: ${{ github.workflow }}
-          retain_days: 0
-          keep_minimum_runs: 2
